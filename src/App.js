@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
-import FreelanceMarketplaceABI from '../build/contracts/FreelanceMarketplace.json';
+import FreelanceMarketplaceABI from './contracts/FreelanceMarketplace.json';
 import './App.css';
 import ServiceList from './components/ServiceList';
 import ServiceForm from './components/ServiceForm';
