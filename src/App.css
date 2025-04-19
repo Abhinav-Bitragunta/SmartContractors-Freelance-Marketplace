@@ -1,0 +1,28 @@
+.App {
+  min-height: 100vh;
+}
+
+.navbar-text {
+  margin-left: 10px;
+}
+
+.nav-link.btn-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.nav-link.btn-link:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.card {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-footer {
+  background-color: rgba(0, 0, 0, 0.02);
+}
