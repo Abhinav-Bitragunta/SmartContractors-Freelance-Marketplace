@@ -26,6 +26,13 @@ function Navbar({ accounts, setActiveTab, isFreelancer, toggleUserType }) {
                 </button>
               </li>
             )}
+            {isFreelancer && (
+              <li className="nav-item">
+                <button className="nav-link btn btn-link" onClick={() => setActiveTab('myServices')}>
+                  My Services
+                </button>
+              </li>
+            )}
             {!isFreelancer && (
               <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={() => setActiveTab('clientDashboard')}>

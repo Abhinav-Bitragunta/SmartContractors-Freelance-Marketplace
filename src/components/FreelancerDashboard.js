@@ -10,45 +10,51 @@ function FreelancerDashboard({ services, currentAccount }) {
   const ratedServices = myServices.filter(s => s.serviceRating > 0);
   const totalRatings = ratedServices.length;
   const avgRating = totalRatings
-    ? (ratedServices.reduce((sum, s) => sum + parseInt(s.serviceRating), 0) / totalRatings).toFixed(2)
+    ? (ratedServices.reduce((sum, s) => sum + parseInt(s.serviceRating), 0) / totalRatings).toFixed(0)
     : null;
+
+  if (myServices.length === 0) {
+    return <div className="alert alert-info">You haven't created any services yet.</div>;
+  }
 
   return (
     <div className="container mt-4">
-      <h3>Freelancer Dashboard</h3>
-      <p>
-        <strong>Average Rating:</strong>{' '}
-        {avgRating ? `${avgRating}/5` : 'No ratings yet'}
-      </p>
-      <p>
-        <strong>Total Ratings Received:</strong> {totalRatings}
-      </p>
+      <p><strong>Average Rating:</strong> {avgRating ? `${avgRating}/5` : 'No ratings yet'}</p>
+      <p><strong>Total Ratings Received:</strong> {totalRatings}</p>
 
-      <div className="row">
-        {myServices.map(service => (
-          <div key={service.id} className="col-md-4 mb-4">
-            <div className="card h-100">
-              <div className="card-header">
-                <h5 className="card-title mb-0">{service.title}</h5>
-              </div>
-              <div className="card-body">
-                <p><strong>Price:</strong> {service.price} ETH</p>
-                <p><strong>Status:</strong>{' '}
-                  {service.isPaid
-                    ? 'Payment Received'
-                    : service.isActive
-                      ? 'In Progress'
-                      : 'Cancelled'}
-                </p>
-                <p><strong>Rating:</strong>{' '}
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Price (ETH)</th>
+              <th>Status</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myServices.map(service => (
+              <tr key={service.id}>
+                <td>{service.title}</td>
+                <td>{service.price}</td>
+                <td>
+                  {service.isPaid ? (
+                    <span className="badge badge-success">Payment Received</span>
+                  ) : service.isActive ? (
+                    <span className="badge badge-warning">In Progress</span>
+                  ) : (
+                    <span className="badge badge-secondary">Cancelled</span>
+                  )}
+                </td>
+                <td>
                   {service.serviceRating > 0
                     ? `${service.serviceRating}/5`
                     : 'Not Rated'}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

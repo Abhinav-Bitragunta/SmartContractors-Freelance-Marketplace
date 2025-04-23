@@ -6,7 +6,7 @@ import ServiceList from './components/ServiceList';
 import ServiceForm from './components/ServiceForm';
 import Navbar from './components/Navbar';
 import ClientDashboard from './components/ClientDashboard';
-
+import FreelancerDashboard from './components/FreelancerDashboard';
 
 function App() {
   const [web3, setWeb3] = useState(null);
@@ -251,6 +251,16 @@ function App() {
           <div>
             <h2>Offer Your Service</h2>
             <ServiceForm createService={createService} />
+          </div>
+        )}
+
+        {activeTab === 'myServices' && isFreelancer && (
+          <div>
+            <h2>My Services</h2>
+            <FreelancerDashboard
+              services={services}
+              currentAccount={accounts[0]}
+            />
           </div>
         )}
         
