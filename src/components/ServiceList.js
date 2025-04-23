@@ -33,6 +33,11 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer })
                   Freelancer: {service.freelancer.substring(0, 6)}...{service.freelancer.substring(service.freelancer.length - 4)}
                 </small>
               </p>
+              <p className="card-text">
+                <small className="text-muted">
+                  Avg. Rating: {parseInt(service.avgRating) > 0 ? `${service.avgRating}/5` : 'No ratings yet'}
+                </small>
+                </p>
             </div>
             <div className="card-footer">
               {!isFreelancer && (

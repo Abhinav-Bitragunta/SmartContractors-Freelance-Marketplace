@@ -13,6 +13,13 @@ contract FreelanceMarketplace is ReentrancyGuard {
         uint256 price;
         bool isActive;
         bool isPaid;
+        uint8 rating; // Rating from the client (0 = not rated, 1-5 valid ratings)
+    }
+
+    // Struct to aggregate freelancer ratings
+    struct FreelancerRating {
+        uint256 total; // Sum of rating values
+        uint256 count; // Number of ratings received
     }
 
     // Counter for service IDs
@@ -23,12 +30,16 @@ contract FreelanceMarketplace is ReentrancyGuard {
     
     // Mapping to track escrowed funds for each service
     mapping(uint256 => uint256) public escrowedFunds;
+
+    // Mapping from freelancer address to their aggregated rating data
+    mapping(address => FreelancerRating) public freelancerRatings;
     
     // Events
     event ServiceOffered(uint256 indexed serviceId, address indexed freelancer, string title, uint256 price);
     event FreelancerHired(uint256 indexed serviceId, address indexed client);
     event PaymentReleased(uint256 indexed serviceId, address indexed freelancer, uint256 amount);
     event ClientRefunded(uint256 indexed serviceId, address indexed client, uint256 amount);
+    event ServiceRated(uint256 indexed serviceId, address indexed client, uint8 rating);
     
     /**
      * @dev Allows freelancers to list their services
@@ -48,7 +59,8 @@ contract FreelanceMarketplace is ReentrancyGuard {
             title: _title,
             price: _price,
             isActive: true,
-            isPaid: false
+            isPaid: false,
+            rating: 0
         });
         
         serviceCounter++;
@@ -120,6 +132,45 @@ contract FreelanceMarketplace is ReentrancyGuard {
         emit ClientRefunded(_serviceId, service.client, amount);
     }
     
+    /**
+     * @dev Allows the client to rate a service (only if payment was released).
+     * @param _serviceId ID of the service to rate.
+     * @param _rating Service rating value (must be between 1 and 5).
+     */
+    function rateService(uint256 _serviceId, uint8 _rating) external nonReentrant {
+        Service storage service = services[_serviceId];
+
+        require(service.client == msg.sender, "Only client can rate the service");
+        require(service.isPaid, "Service payment not released yet");
+        require(_rating >= 1 && _rating <= 5, "Rating must be between 1 and 5");
+        require(service.rating == 0, "Service already rated");
+        
+        // Update the service rating
+        service.rating = _rating;
+        
+        // Update the freelancer's aggregated ratings
+        freelancerRatings[service.freelancer].total += _rating;
+        freelancerRatings[service.freelancer].count += 1;
+        
+        emit ServiceRated(_serviceId, msg.sender, _rating);
+    }
+
+    /**
+     * @dev Returns the average rating of a freelancer.
+     * @param _freelancer Address of the freelancer.
+     * @return The average rating as an integer (0 if no ratings present).
+     *
+     * Note: This returns an integer average with division truncation. For more precise ratings,
+     * additional logic could be implemented to return a fixed-point number.
+     */
+    function getAverageRating(address _freelancer) external view returns (uint256) {
+        FreelancerRating memory rating = freelancerRatings[_freelancer];
+        if (rating.count == 0) {
+            return 0;
+        }
+        return rating.total / rating.count;
+    }
+
     /**
      * @dev Returns all listed services
      */

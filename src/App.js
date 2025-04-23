@@ -84,6 +84,9 @@ function App() {
       for (let i = 0; i < serviceCount; i++) {
         const service = await contract.methods.services(i).call();
         if (service.freelancer !== '0x0000000000000000000000000000000000000000') {
+          // Get the freelancer's average rating from the contract
+          const avgRating = await contract.methods.getAverageRating(service.freelancer).call();
+
           const formattedService = {
             id: i,
             freelancer: service.freelancer,
@@ -91,7 +94,9 @@ function App() {
             title: service.title,
             price: web3.utils.fromWei(service.price, 'ether'),
             isActive: service.isActive,
-            isPaid: service.isPaid
+            isPaid: service.isPaid,
+            serviceRating: service.rating, // Rating submitted for this service (0 if not rated)
+            avgRating: avgRating        // Freelancer's overall average rating
           };
           
           loadedServices.push(formattedService);
@@ -184,6 +189,34 @@ function App() {
     setLoading(false);
   };
 
+  const rateService = async (serviceId, rating) => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      await contract.methods.rateService(serviceId, rating).send({ from: accounts[0] });
+      setSuccess('Service rated successfully!');
+      await loadServices(web3, contract, accounts[0]);
+    } catch (error) {
+      console.error("Error rating service:", error);
+      setError('Failed to rate service. Check console for details.');
+    }
+
+    setLoading(false);
+  };
+
+  const getAverageRating = async (freelancerAddress) => {
+    try {
+      const avgRating = await contract.methods.getAverageRating(freelancerAddress).call();
+      return avgRating;
+    } catch (error) {
+      console.error("Error fetching average rating:", error);
+      setError('Failed to get average rating. Check console for details.');
+      return "0";
+    }
+  };
+
   const toggleUserType = () => {
     setIsFreelancer(!isFreelancer);
   };
@@ -231,6 +264,8 @@ function App() {
               services={clientServices}
               releasePayment={releasePayment}
               requestRefund={requestRefund}
+              rateService={rateService}
+              getAverageRating={getAverageRating}  /* Optionally pass this if needed */
             />
           </div>
         )}
