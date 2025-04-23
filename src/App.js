@@ -7,6 +7,7 @@ import ServiceForm from './components/ServiceForm';
 import Navbar from './components/Navbar';
 import ClientDashboard from './components/ClientDashboard';
 
+
 function App() {
   const [web3, setWeb3] = useState(null);
   const [accounts, setAccounts] = useState([]);
@@ -86,6 +87,7 @@ function App() {
         if (service.freelancer !== '0x0000000000000000000000000000000000000000') {
           // Get the freelancer's average rating from the contract
           const avgRating = await contract.methods.getAverageRating(service.freelancer).call();
+          const ratingCount = await contract.methods.getRatingCount(service.freelancer).call();
 
           const formattedService = {
             id: i,
@@ -96,7 +98,8 @@ function App() {
             isActive: service.isActive,
             isPaid: service.isPaid,
             serviceRating: service.rating, // Rating submitted for this service (0 if not rated)
-            avgRating: avgRating        // Freelancer's overall average rating
+            avgRating: avgRating,        // Freelancer's overall average rating
+            ratingCount: ratingCount
           };
           
           loadedServices.push(formattedService);
@@ -213,6 +216,17 @@ function App() {
     } catch (error) {
       console.error("Error fetching average rating:", error);
       setError('Failed to get average rating. Check console for details.');
+      return "0";
+    }
+  };
+
+  const getRatingCount = async (freelancerAddress) => {
+    try {
+      const ratingCount = await contract.methods.getRatingCount(freelancerAddress).call();
+      return ratingCount;
+    } catch (error) {
+      console.error("Error fetching rating count:", error);
+      setError('Failed to get rating count. Check console for details.');
       return "0";
     }
   };

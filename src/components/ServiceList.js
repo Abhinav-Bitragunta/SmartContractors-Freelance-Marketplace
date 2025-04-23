@@ -37,7 +37,12 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer })
                 <small className="text-muted">
                   Avg. Rating: {parseInt(service.avgRating) > 0 ? `${service.avgRating}/5` : 'No ratings yet'}
                 </small>
-                </p>
+              </p>
+              <p className="card-text">
+                <small className="text-muted">
+                  Number of reviews: {parseInt(service.ratingCount) > 0 ? `${service.ratingCount}`: 0}
+                </small>
+              </p>
             </div>
             <div className="card-footer">
               {!isFreelancer && (

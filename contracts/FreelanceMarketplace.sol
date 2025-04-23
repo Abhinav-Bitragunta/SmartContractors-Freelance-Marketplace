@@ -172,6 +172,15 @@ contract FreelanceMarketplace is ReentrancyGuard {
     }
 
     /**
+     * @dev Returns the number of ratings received by a certain freelancer.
+     * @param _freelancer Address of the freelancer.
+     * @return The number of ratings as an integer (0 if no ratings present).
+     */
+    function getRatingCount(address _freelancer) external view returns (uint256) {
+        return freelancerRatings[_freelancer].count;
+    }
+
+    /**
      * @dev Returns all listed services
      */
     function getServiceCount() external view returns (uint256) {
