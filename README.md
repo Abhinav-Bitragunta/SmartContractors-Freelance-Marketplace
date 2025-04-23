@@ -21,18 +21,17 @@ This project was made for *CS 218: Programmable and Interoperable Blockchains* b
 - Freelancers can list services with title and price, these will be listed in the marketplace for anyone to hire
 - The marketplace displays currently active services offered by the freelancers on the network. Each service has its title and price listed
 - Clients can hire freelancers from the marketplace, escrow payments, and release them upon completion (handled by smart contracts)
-- Clients can view the details of ever service they've hired
+- Clients can view the details of every service they've hired
 - Freelancers can view the services they offer, along with the details of each service
   
 We implemented the following *bonus features* as well
-- The services listed on the marketplace are accompanied by the average rating fo the freelancer offering it, and the number of ratings they've received till date
+- The services listed on the marketplace are accompanied by the average rating for the freelancer offering it, and the number of ratings they've received till date
 - Upon the completion of a service, the client may rate it on a 1-5 scale based on their degree of satisfaction. This affects the freelancer's average rating
-- The rating obtained for each service is visible to the freelancer.
+- The rating obtained for each service is visible to the freelancer
 
-## Instructions for setup
-The following instructions are for Windows.
+## Instructions for setup (Windows)
 
-`Node v18.20.8`, `npm 10.8.2`, and the Ganache application for Windows, and the MetaMask browser extension are required. Once you've verified the installation and usage of said versions, follow the next instructions
+`Node v18.20.8`, `npm 10.8.2`, the Ganache application for Windows, and the MetaMask browser extension are required. Once you've verified the installation and usage of said versions, follow the next instructions
 ### 1. Clone the repository and install dependencies
 It is highly recommended that you clone into a path without any spaces in it.
 ``` bash
