@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ClientDashboard({ services, releasePayment, requestRefund, rateService }) {
+function ClientDashboard({ services, releasePayment, rateService }) {
   const [ratingInputs, setRatingInputs] = useState({});
 
   // Handle changes in the rating dropdown for each service
@@ -61,7 +61,7 @@ function ClientDashboard({ services, releasePayment, requestRefund, rateService 
                       // Dropdown for rating if paid but not yet rated
                       <select
                         className="form-control form-control-sm"
-                        value={ratingInputs[service.id] || 1}
+                        value={ratingInputs[service.id] || 5}
                         onChange={(e) => handleRatingChange(service.id, e)}
                       >
                         <option value="1">1</option>
@@ -84,12 +84,7 @@ function ClientDashboard({ services, releasePayment, requestRefund, rateService 
                       >
                         Release Payment
                       </button>
-                      <button 
-                        className="btn btn-danger btn-sm"
-                        onClick={() => requestRefund(service.id)}
-                      >
-                        Request Refund
-                      </button>
+                      
                     </>
                   )}
                   {service.isPaid && (!service.serviceRating || ratingValue === 0) && (
@@ -102,9 +97,6 @@ function ClientDashboard({ services, releasePayment, requestRefund, rateService 
                   )}
                   {service.isPaid && ratingValue > 0 && (
                     <span className="text-success">Rated</span>
-                  )}
-                  {!service.isActive && !service.isPaid && (
-                    <span className="text-secondary">Refunded</span>
                   )}
                 </td>
               </tr>

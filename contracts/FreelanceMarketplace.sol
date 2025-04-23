@@ -38,7 +38,6 @@ contract FreelanceMarketplace is ReentrancyGuard {
     event ServiceOffered(uint256 indexed serviceId, address indexed freelancer, string title, uint256 price);
     event FreelancerHired(uint256 indexed serviceId, address indexed client);
     event PaymentReleased(uint256 indexed serviceId, address indexed freelancer, uint256 amount);
-    event ClientRefunded(uint256 indexed serviceId, address indexed client, uint256 amount);
     event ServiceRated(uint256 indexed serviceId, address indexed client, uint8 rating);
     
     /**
@@ -108,28 +107,6 @@ contract FreelanceMarketplace is ReentrancyGuard {
         require(success, "Payment failed");
         
         emit PaymentReleased(_serviceId, service.freelancer, amount);
-    }
-    
-    /**
-     * @dev Allows client to request refund (could be extended with deadline logic)
-     * @param _serviceId ID of the service
-     */
-    function refundClient(uint256 _serviceId) external nonReentrant {
-        Service storage service = services[_serviceId];
-        
-        require(service.client == msg.sender, "Only client can request refund");
-        require(!service.isPaid, "Payment already released");
-        require(escrowedFunds[_serviceId] > 0, "No funds in escrow");
-        
-        uint256 amount = escrowedFunds[_serviceId];
-        //Shouldn't this be below be after the payment failed line? [APPARENTLY NOT, REENTRANCY ATTACK]
-        escrowedFunds[_serviceId] = 0;
-        service.isActive = false;
-        
-        (bool success, ) = payable(service.client).call{value: amount}("");
-        require(success, "Refund failed");
-        
-        emit ClientRefunded(_serviceId, service.client, amount);
     }
     
     /**

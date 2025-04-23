@@ -175,23 +175,6 @@ function App() {
     setLoading(false);
   };
 
-  const requestRefund = async (serviceId) => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
-    
-    try {
-      await contract.methods.refundClient(serviceId).send({ from: accounts[0] });
-      setSuccess('Refund requested successfully!');
-      await loadServices(web3, contract, accounts[0]);
-    } catch (error) {
-      console.error("Error requesting refund:", error);
-      setError('Failed to request refund. Check console for details.');
-    }
-    
-    setLoading(false);
-  };
-
   const rateService = async (serviceId, rating) => {
     setError('');
     setSuccess('');
@@ -277,7 +260,6 @@ function App() {
             <ClientDashboard 
               services={clientServices}
               releasePayment={releasePayment}
-              requestRefund={requestRefund}
               rateService={rateService}
               getAverageRating={getAverageRating}  /* Optionally pass this if needed */
             />
