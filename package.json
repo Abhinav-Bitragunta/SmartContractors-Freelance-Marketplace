@@ -4,7 +4,7 @@
   "description": "A trustless freelance marketplace on blockchain",
   "main": "truffle-config.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env HOST=0.0.0.0 react-scripts start",
     "build": "react-scripts build",
     "test": "truffle test",
     "eject": "react-scripts eject"
@@ -19,6 +19,7 @@
     "web3": "^1.8.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "truffle": "^5.7.1"
   },
   "browserslist": {

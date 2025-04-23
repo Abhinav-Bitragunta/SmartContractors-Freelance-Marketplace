@@ -37,9 +37,9 @@ function ServiceForm({ createService }) {
               id="price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.1"
-              step="0.01"
-              min="0.01"
+              placeholder="0.0001"
+              step="0.0001"
+              min="0"
               required
             />
           </div>

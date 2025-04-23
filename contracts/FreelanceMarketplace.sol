@@ -85,8 +85,9 @@ contract FreelanceMarketplace is ReentrancyGuard {
         require(service.client == msg.sender, "Only client can release payment");
         require(!service.isPaid, "Payment already released");
         require(escrowedFunds[_serviceId] > 0, "No funds in escrow");
-        
+        // Should there be a 'require(service.price == escrowedFunds[_serviceID], "Escrowed funds do not match price"); ?'       
         uint256 amount = escrowedFunds[_serviceId];
+        //Shouldn't this be below be after the payment failed line? [APPARENTLY NOT, REENTRANCY ATTACK]
         escrowedFunds[_serviceId] = 0;
         service.isPaid = true;
         service.isActive = false;
@@ -109,6 +110,7 @@ contract FreelanceMarketplace is ReentrancyGuard {
         require(escrowedFunds[_serviceId] > 0, "No funds in escrow");
         
         uint256 amount = escrowedFunds[_serviceId];
+        //Shouldn't this be below be after the payment failed line? [APPARENTLY NOT, REENTRANCY ATTACK]
         escrowedFunds[_serviceId] = 0;
         service.isActive = false;
         
