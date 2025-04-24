@@ -11,7 +11,7 @@ function ClientDashboard({ services, releasePayment, rateService }) {
   // Call the rateService function with the selected rating
   const handleRate = async (serviceId) => {
     // Use the selected rating from state, or default to 1 if none is set
-    const rating = ratingInputs[serviceId] || 1;
+    const rating = ratingInputs[serviceId] || 5;
     await rateService(serviceId, rating);
   };
 
@@ -46,11 +46,11 @@ function ClientDashboard({ services, releasePayment, rateService }) {
                 <td>{service.price}</td>
                 <td>
                   {service.isPaid ? (
-                    <span className="badge badge-success">Completed</span>
+                    <span className="badge2 badge-success">Completed</span>
                   ) : service.isActive ? (
-                    <span className="badge badge-warning">In Progress</span>
+                    <span className="badge2 badge-warning">In Progress</span>
                   ) : (
-                    <span className="badge badge-secondary">Cancelled</span>
+                    <span className="badge2 badge-secondary">Cancelled</span>
                   )}
                 </td>
                 <td>

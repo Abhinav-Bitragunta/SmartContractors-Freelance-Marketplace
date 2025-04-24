@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer }) {
+function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, activeTab }) {
   // Filter active services that haven't been hired yet
   const availableServices = services.filter(service => 
     service.isActive && 
@@ -29,23 +29,17 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer })
                 <strong>Price:</strong> {service.price} ETH
               </p>
               <p className="card-text text-truncate">
-                <small className="text-muted">
-                  Freelancer: {service.freelancer.substring(0, 6)}...{service.freelancer.substring(service.freelancer.length - 4)}
-                </small>
+                 <strong> Freelancer: </strong> {service.freelancer.substring(0, 6)}...{service.freelancer.substring(service.freelancer.length - 4)}
               </p>
               <p className="card-text">
-                <small className="text-muted">
-                  Avg. Rating: {parseInt(service.avgRating) > 0 ? `${service.avgRating}/5` : 'No ratings yet'}
-                </small>
+              <strong> Avg. Rating: </strong> {parseInt(service.avgRating) > 0 ? `${service.avgRating}/5` : 'No ratings yet'}
               </p>
               <p className="card-text">
-                <small className="text-muted">
-                  Number of reviews: {parseInt(service.ratingCount) > 0 ? `${service.ratingCount}`: 0}
-                </small>
+                <strong> Number of reviews: </strong> {parseInt(service.ratingCount) > 0 ? `${service.ratingCount}`: 0}
               </p>
             </div>
             <div className="card-footer">
-              {!isFreelancer && (
+            {!isFreelancer && activeTab === 'marketplace' && (
                 <button 
                   className="btn btn-primary btn-block"
                   onClick={() => hireFreelancer(service.id, service.price)}
@@ -53,11 +47,17 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer })
                   Hire Freelancer
                 </button>
               )}
-              {isFreelancer && (
-                <button className="btn btn-secondary btn-block" disabled>
-                  Not Available (Freelancer Mode)
-                </button>
-              )}
+              {/* {isFreelancer && activeTab === 'My Services' && (
+                <div>
+                  {service.isPaid ? (
+                    <span className="badge status-badge badge-success">Completed</span>
+                  ) : service.isActive ? (
+                    <span className="badge status-badge badge-warning">In Progress</span>
+                  ) : (
+                    <span className="badge status-badge badge-danger">Cancelled</span>
+                  )}
+                </div>
+              )} */}
             </div>
           </div>
         </div>

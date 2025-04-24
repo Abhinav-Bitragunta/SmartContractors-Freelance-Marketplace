@@ -7,6 +7,7 @@ import ServiceForm from './components/ServiceForm';
 import Navbar from './components/Navbar';
 import ClientDashboard from './components/ClientDashboard';
 import FreelancerDashboard from './components/FreelancerDashboard';
+import Loading from './components/Loading';
 
 function App() {
   const [web3, setWeb3] = useState(null);
@@ -19,6 +20,31 @@ function App() {
   const [success, setSuccess] = useState('');
   const [clientServices, setClientServices] = useState([]);
   const [isFreelancer, setIsFreelancer] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [visible, setVisible] = useState(true);
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (success || error) {
+      setVisible(true);
+      const fadeTimeout = setTimeout(() => setVisible(false), 4000); // changed from 2000 to 4000
+      const clearMessagesTimeout = setTimeout(() => {
+        setSuccess('');
+        setError('');
+      }, 5000); // changed from 3000 to 5000
+      return () => {
+        clearTimeout(fadeTimeout);
+        clearTimeout(clearMessagesTimeout);
+      };
+    }
+  }, [success, error]);
 
   useEffect(() => {
     const init = async () => {
@@ -43,11 +69,18 @@ function App() {
         const networkId = await web3Instance.eth.net.getId();
         const deployedNetwork = FreelanceMarketplaceABI.networks[networkId];
         
+        // if (!deployedNetwork) {
+        //   setError('Contract not deployed on the detected network. Please switch to the correct network.');
+        //   setLoading(false);
+        //   return;
+        // }
         if (!deployedNetwork) {
-          setError('Contract not deployed on the detected network. Please switch to the correct network.');
-          setLoading(false);
+          setTimeout(() => {
+            setError('Contract not deployed on the detected network. Please switch to the correct network.');
+            setLoading(false);
+          }, 3000); // 5000 milliseconds = 5 seconds
           return;
-        }
+        }        
         
         const contractInstance = new web3Instance.eth.Contract(
           FreelanceMarketplaceABI.abi,
@@ -218,10 +251,9 @@ function App() {
     setIsFreelancer(!isFreelancer);
   };
 
-  if (loading) {
-    return <div className="container mt-5 text-center">Loading...</div>;
-  }
-
+  if (isLoading) {
+    return <Loading />;
+  }  
   return (
     <div className="App">
       <Navbar 
@@ -229,13 +261,25 @@ function App() {
         setActiveTab={setActiveTab}
         isFreelancer={isFreelancer}
         toggleUserType={toggleUserType}
+        activeTab={activeTab}  // <-- add this
       />
+
       
       <div className="container mt-4">
-        {error && <div className="alert alert-danger">{error}</div>}
-        {success && <div className="alert alert-success">{success}</div>}
+        {/* {activeTab === 'My Services' && isFreelancer &&(
+          <div>
+            <h2>My Services</h2>
+            <ServiceList 
+              services={services} 
+              currentAccount={accounts[0]} 
+              hireFreelancer={hireFreelancer}
+              isFreelancer={isFreelancer}
+              activeTab={activeTab}
+            />
+          </div>
+        )} */}
         
-        {activeTab === 'marketplace' && (
+        {activeTab === 'marketplace' && !isFreelancer && (
           <div>
             <h2>Available Services</h2>
             <ServiceList 
@@ -243,6 +287,20 @@ function App() {
               currentAccount={accounts[0]} 
               hireFreelancer={hireFreelancer}
               isFreelancer={isFreelancer}
+              activeTab={activeTab}
+            />
+          </div>
+        )}
+
+        {activeTab === 'Marketplacef' && isFreelancer &&(
+          <div>
+            <h2>Available Services</h2>
+            <ServiceList 
+              services={services} 
+              currentAccount={accounts[0]} 
+              hireFreelancer={hireFreelancer}
+              isFreelancer={isFreelancer}
+              activeTab={activeTab}
             />
           </div>
         )}
@@ -250,7 +308,7 @@ function App() {
         {activeTab === 'offerService' && isFreelancer && (
           <div>
             <h2>Offer Your Service</h2>
-            <ServiceForm createService={createService} />
+            <div className='service-form'><ServiceForm createService={createService} /></div>
           </div>
         )}
 
@@ -271,10 +329,20 @@ function App() {
               services={clientServices}
               releasePayment={releasePayment}
               rateService={rateService}
-              getAverageRating={getAverageRating}  /* Optionally pass this if needed */
+              getAverageRating={getAverageRating}  
             />
           </div>
         )}
+
+        {activeTab === 'offerService' && !isFreelancer && setActiveTab('clientDashboard')}
+        {activeTab === 'myServices' && !isFreelancer && setActiveTab('clientDashboard')}
+        {activeTab === 'Marketplacef' && !isFreelancer && setActiveTab('clientDashboard')}
+        {activeTab === 'marketplace' && isFreelancer && setActiveTab('myServices')}
+        {activeTab === 'clientDashboard' && isFreelancer && setActiveTab('myServices')}
+
+        {error && visible && <div className="alert alert-danger">{error}</div>}
+        {success && visible && <div className="alert alert-success">{success}</div>}
+
       </div>
     </div>
   );

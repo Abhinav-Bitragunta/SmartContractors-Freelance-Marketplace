@@ -14,7 +14,7 @@ function ServiceForm({ createService }) {
   };
 
   return (
-    <div className="card">
+    <div className="card service-card w-50">
       <div className="card-body">
         <form onSubmit={handleSubmit}>
           <div className="form-group">

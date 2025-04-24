@@ -39,11 +39,11 @@ function FreelancerDashboard({ services, currentAccount }) {
                 <td>{service.price}</td>
                 <td>
                   {service.isPaid ? (
-                    <span className="badge badge-success">Payment Received</span>
+                    <span className="badge2 badge-success">Payment Received</span>
                   ) : service.isActive ? (
-                    <span className="badge badge-warning">In Progress</span>
+                    <span className="badge2 badge-warning">In Progress</span>
                   ) : (
-                    <span className="badge badge-secondary">Cancelled</span>
+                    <span className="badge2 badge-secondary">Cancelled</span>
                   )}
                 </td>
                 <td>
