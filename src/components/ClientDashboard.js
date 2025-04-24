@@ -3,14 +3,11 @@ import React, { useState } from 'react';
 function ClientDashboard({ services, releasePayment, rateService }) {
   const [ratingInputs, setRatingInputs] = useState({});
 
-  // Handle changes in the rating dropdown for each service
   const handleRatingChange = (serviceId, event) => {
     setRatingInputs({ ...ratingInputs, [serviceId]: event.target.value });
   };
 
-  // Call the rateService function with the selected rating
   const handleRate = async (serviceId) => {
-    // Use the selected rating from state, or default to 1 if none is set
     const rating = ratingInputs[serviceId] || 5;
     await rateService(serviceId, rating);
   };
@@ -34,7 +31,6 @@ function ClientDashboard({ services, releasePayment, rateService }) {
         </thead>
         <tbody>
           {services.map(service => {
-            // Parse serviceRating to a number (it might come as a string from the contract)
             const ratingValue = parseInt(service.serviceRating, 10) || 0;
             return (
               <tr key={service.id}>
@@ -58,7 +54,6 @@ function ClientDashboard({ services, releasePayment, rateService }) {
                     ratingValue > 0 ? (
                       <span>{ratingValue}/5</span>
                     ) : (
-                      // Dropdown for rating if paid but not yet rated
                       <select
                         className="form-control form-control-sm"
                         value={ratingInputs[service.id] || 5}

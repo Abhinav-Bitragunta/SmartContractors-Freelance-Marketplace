@@ -17,8 +17,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -31,8 +30,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -969,7 +967,7 @@
   "sourceMap": "60:558:2:-:0;;;285:45;;;;;;;;;-1:-1:-1;306:5:2;:18;;-1:-1:-1;;;;;;306:18:2;314:10;306:18;;;60:558;;;;;;",
   "deployedSourceMap": "60:558:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;447:168;;;;;;:::i;:::-;;:::i;:::-;;110:36;;;;;;;;;451:25:3;;;439:2;424:18;110:36:2;;;;;;;;85:20;;;;;-1:-1:-1;;;;;85:20:2;;;;;;-1:-1:-1;;;;;651:32:3;;;633:51;;621:2;606:18;85:20:2;487:203:3;336:105:2;;;;;;:::i;:::-;;:::i;447:168::-;204:5;;-1:-1:-1;;;;;204:5:2;190:10;:19;182:83;;;;-1:-1:-1;;;182:83:2;;;;;;;:::i;:::-;;;;;;;;;584:24:::1;::::0;562:47:::1;::::0;-1:-1:-1;;;562:47:2;;543:11;;-1:-1:-1;;;;;562:21:2;::::1;::::0;::::1;::::0;:47:::1;::::0;::::1;;451:25:3::0;;;439:2;424:18;;305:177;562:47:2::1;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;::::0;::::1;;;;;;;;;503:112;447:168:::0;:::o;336:105::-;204:5;;-1:-1:-1;;;;;204:5:2;190:10;:19;182:83;;;;-1:-1:-1;;;182:83:2;;;;;;;:::i;:::-;399:24:::1;:36:::0;336:105::o;14:286:3:-;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;168:23;;-1:-1:-1;;;;;220:31:3;;210:42;;200:70;;266:1;263;256:12;200:70;289:5;14:286;-1:-1:-1;;;14:286:3:o;695:180::-;754:6;807:2;795:9;786:7;782:23;778:32;775:52;;;823:1;820;813:12;775:52;-1:-1:-1;846:23:3;;695:180;-1:-1:-1;695:180:3:o;880:415::-;1082:2;1064:21;;;1121:2;1101:18;;;1094:30;1160:34;1155:2;1140:18;;1133:62;-1:-1:-1;;;1226:2:3;1211:18;;1204:49;1285:3;1270:19;;880:415::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract Migrations {\r\n  address public owner;\r\n  uint public last_completed_migration;\r\n\r\n  modifier restricted() {\r\n    require(msg.sender == owner, \"This function is restricted to the contract's owner\");\r\n    _;\r\n  }\r\n\r\n  constructor() {\r\n    owner = msg.sender;\r\n  }\r\n\r\n  function setCompleted(uint completed) public restricted {\r\n    last_completed_migration = completed;\r\n  }\r\n\r\n  function upgrade(address new_address) public restricted {\r\n    Migrations upgraded = Migrations(new_address);\r\n    upgraded.setCompleted(last_completed_migration);\r\n  }\r\n}\r\n",
-  "sourcePath": "C:\\Users\\Lenovo\\Downloads\\SmartContractors-Freelance-Marketplace\\contracts\\Migrations.sol",
+  "sourcePath": "C:\\Users\\srini\\OneDrive\\Desktop\\cur\\SmartContractors-Freelance-Marketplace\\contracts\\Migrations.sol",
   "ast": {
     "absolutePath": "project:/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -1688,13 +1686,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x0DD51E57b10e32dCdABb78117766204dA69b04BD",
-      "transactionHash": "0x8da78a4282a62c1d82cd33bc84cb9bd160612486d36977b2497dc23958f6a953"
+      "address": "0x279892ff4EdB8964e4083965E4975ab258300d3f",
+      "transactionHash": "0xd4893a4e2cb6e7edfc35a04b4908b572cac2a97851bf909b7b4c0cca9fffeaa7"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-04-23T19:12:48.303Z",
-  "networkType": "ethereum",
+  "updatedAt": "2025-04-24T10:58:36.680Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

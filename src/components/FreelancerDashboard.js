@@ -1,12 +1,10 @@
 import React from 'react';
 
 function FreelancerDashboard({ services, currentAccount }) {
-  // Filter only the services created by this freelancer
   const myServices = services.filter(service =>
     service.freelancer.toLowerCase() === currentAccount.toLowerCase()
   );
 
-  // Calculate average rating and total number of ratings
   const ratedServices = myServices.filter(s => s.serviceRating > 0);
   const totalRatings = ratedServices.length;
   const avgRating = totalRatings

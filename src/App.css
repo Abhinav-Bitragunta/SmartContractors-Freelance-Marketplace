@@ -127,7 +127,7 @@ h2{
 
 .message{
   opacity: 1;
-  transition: opacity 1s ease-in;
+  transition: opacity 5s ease-in-out;
 }
 
 .message.fade-out {
@@ -154,3 +154,22 @@ h2{
 .badge-danger {
   color: red;
 }
+
+.alert.alert-danger {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.alert.alert-danger.show {
+  opacity: 1;
+}
+
+.alert.alert-success {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.alert.alert-success.show {
+  opacity: 1;
+}
+

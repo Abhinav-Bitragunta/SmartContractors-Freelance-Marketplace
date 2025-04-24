@@ -5,10 +5,9 @@ const Loading = () => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Trigger fade-in after mount
     const timeout = setTimeout(() => {
       setVisible(false);
-    }, 2500); // Short delay to allow CSS transition
+    }, 2000); 
 
     return () => clearTimeout(timeout);
   }, []);

@@ -27,18 +27,18 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 2500);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (success || error) {
       setVisible(true);
-      const fadeTimeout = setTimeout(() => setVisible(false), 4000); // changed from 2000 to 4000
+      const fadeTimeout = setTimeout(() => setVisible(false), 4000); 
       const clearMessagesTimeout = setTimeout(() => {
         setSuccess('');
         setError('');
-      }, 5000); // changed from 3000 to 5000
+      }, 5000);
       return () => {
         clearTimeout(fadeTimeout);
         clearTimeout(clearMessagesTimeout);
@@ -49,7 +49,6 @@ function App() {
   useEffect(() => {
     const init = async () => {
       try {
-        // Connect to Web3
         let web3Instance;
         if (window.ethereum) {
           web3Instance = new Web3(window.ethereum);
@@ -57,28 +56,23 @@ function App() {
         } else if (window.web3) {
           web3Instance = new Web3(window.web3.currentProvider);
         } else {
-          setError('No Ethereum browser extension detected. Please install MetaMask.');
-          setLoading(false);
+          setTimeout(() => {
+            setError('No Ethereum browser extension detected. Please install MetaMask.');
+            setLoading(false);
+          }, 2750);
           return;
         }
 
-        // Get connected accounts
         const accounts = await web3Instance.eth.getAccounts();
         
-        // Get contract instance
         const networkId = await web3Instance.eth.net.getId();
         const deployedNetwork = FreelanceMarketplaceABI.networks[networkId];
         
-        // if (!deployedNetwork) {
-        //   setError('Contract not deployed on the detected network. Please switch to the correct network.');
-        //   setLoading(false);
-        //   return;
-        // }
         if (!deployedNetwork) {
           setTimeout(() => {
             setError('Contract not deployed on the detected network. Please switch to the correct network.');
             setLoading(false);
-          }, 3000); // 5000 milliseconds = 5 seconds
+          }, 2500); 
           return;
         }        
         
@@ -91,7 +85,6 @@ function App() {
         setAccounts(accounts);
         setContract(contractInstance);
         
-        // Listen for account changes
         window.ethereum.on('accountsChanged', async (newAccounts) => {
           setAccounts(newAccounts);
           await loadServices(web3Instance, contractInstance, newAccounts[0]);
@@ -101,8 +94,10 @@ function App() {
         setLoading(false);
       } catch (error) {
         console.error("Could not connect to contract or blockchain:", error);
-        setError('Failed to load the application. Check console for details.');
-        setLoading(false);
+        setTimeout(() => {
+          setError('Failed to load the application. Check console for details.');
+          setLoading(false);
+        }, 2500);
       }
     };
 
@@ -118,7 +113,6 @@ function App() {
       for (let i = 0; i < serviceCount; i++) {
         const service = await contract.methods.services(i).call();
         if (service.freelancer !== '0x0000000000000000000000000000000000000000') {
-          // Get the freelancer's average rating from the contract
           const avgRating = await contract.methods.getAverageRating(service.freelancer).call();
           const ratingCount = await contract.methods.getRatingCount(service.freelancer).call();
 
@@ -130,14 +124,13 @@ function App() {
             price: web3.utils.fromWei(service.price, 'ether'),
             isActive: service.isActive,
             isPaid: service.isPaid,
-            serviceRating: service.rating, // Rating submitted for this service (0 if not rated)
-            avgRating: avgRating,        // Freelancer's overall average rating
+            serviceRating: service.rating, 
+            avgRating: avgRating,       
             ratingCount: ratingCount
           };
           
           loadedServices.push(formattedService);
           
-          // Check if current user is the client for this service
           if (service.client.toLowerCase() === account.toLowerCase()) {
             clientServicesTemp.push(formattedService);
           }
@@ -261,23 +254,11 @@ function App() {
         setActiveTab={setActiveTab}
         isFreelancer={isFreelancer}
         toggleUserType={toggleUserType}
-        activeTab={activeTab}  // <-- add this
+        activeTab={activeTab}  
       />
 
       
       <div className="container mt-4">
-        {/* {activeTab === 'My Services' && isFreelancer &&(
-          <div>
-            <h2>My Services</h2>
-            <ServiceList 
-              services={services} 
-              currentAccount={accounts[0]} 
-              hireFreelancer={hireFreelancer}
-              isFreelancer={isFreelancer}
-              activeTab={activeTab}
-            />
-          </div>
-        )} */}
         
         {activeTab === 'marketplace' && !isFreelancer && (
           <div>
@@ -340,8 +321,13 @@ function App() {
         {activeTab === 'marketplace' && isFreelancer && setActiveTab('myServices')}
         {activeTab === 'clientDashboard' && isFreelancer && setActiveTab('myServices')}
 
-        {error && visible && <div className="alert alert-danger">{error}</div>}
-        {success && visible && <div className="alert alert-success">{success}</div>}
+        <div className={`alert alert-danger ${visible && error ? 'show' : ''}`}>
+          {error || ''}
+        </div>
+
+        <div className={`alert alert-success ${visible && success ? 'show' : ''}`}>
+          {success || ''}
+        </div>
 
       </div>
     </div>

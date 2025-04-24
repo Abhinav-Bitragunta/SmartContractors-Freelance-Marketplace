@@ -1,13 +1,11 @@
 import React from 'react';
 
 function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, activeTab }) {
-  // Filter active services that haven't been hired yet
   const availableServices = services.filter(service => 
     service.isActive && 
     service.client === '0x0000000000000000000000000000000000000000'
   );
 
-  // Filter out user's own services if in freelancer mode
   const filteredServices = isFreelancer 
     ? availableServices.filter(service => service.freelancer.toLowerCase() !== currentAccount.toLowerCase())
     : availableServices;
@@ -47,17 +45,6 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, a
                   Hire Freelancer
                 </button>
               )}
-              {/* {isFreelancer && activeTab === 'My Services' && (
-                <div>
-                  {service.isPaid ? (
-                    <span className="badge status-badge badge-success">Completed</span>
-                  ) : service.isActive ? (
-                    <span className="badge status-badge badge-warning">In Progress</span>
-                  ) : (
-                    <span className="badge status-badge badge-danger">Cancelled</span>
-                  )}
-                </div>
-              )} */}
             </div>
           </div>
         </div>
