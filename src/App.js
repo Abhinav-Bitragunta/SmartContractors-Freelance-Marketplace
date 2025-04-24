@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     if (success || error) {
       setVisible(true);
-      const fadeTimeout = setTimeout(() => setVisible(false), 4000); 
+      const fadeTimeout = setTimeout(() => setVisible(false), 4000);
       const clearMessagesTimeout = setTimeout(() => {
         setSuccess('');
         setError('');
@@ -64,32 +64,32 @@ function App() {
         }
 
         const accounts = await web3Instance.eth.getAccounts();
-        
+
         const networkId = await web3Instance.eth.net.getId();
         const deployedNetwork = FreelanceMarketplaceABI.networks[networkId];
-        
+
         if (!deployedNetwork) {
           setTimeout(() => {
             setError('Contract not deployed on the detected network. Please switch to the correct network.');
             setLoading(false);
-          }, 2500); 
+          }, 2500);
           return;
-        }        
-        
+        }
+
         const contractInstance = new web3Instance.eth.Contract(
           FreelanceMarketplaceABI.abi,
           deployedNetwork.address
         );
-        
+
         setWeb3(web3Instance);
         setAccounts(accounts);
         setContract(contractInstance);
-        
+
         window.ethereum.on('accountsChanged', async (newAccounts) => {
           setAccounts(newAccounts);
           await loadServices(web3Instance, contractInstance, newAccounts[0]);
         });
-        
+
         await loadServices(web3Instance, contractInstance, accounts[0]);
         setLoading(false);
       } catch (error) {
@@ -109,7 +109,7 @@ function App() {
       const serviceCount = await contract.methods.getServiceCount().call();
       const loadedServices = [];
       const clientServicesTemp = [];
-      
+
       for (let i = 0; i < serviceCount; i++) {
         const service = await contract.methods.services(i).call();
         if (service.freelancer !== '0x0000000000000000000000000000000000000000') {
@@ -124,19 +124,20 @@ function App() {
             price: web3.utils.fromWei(service.price, 'ether'),
             isActive: service.isActive,
             isPaid: service.isPaid,
-            serviceRating: service.rating, 
-            avgRating: avgRating,       
-            ratingCount: ratingCount
+            serviceRating: service.rating,
+            avgRating: avgRating,
+            ratingCount: ratingCount,
+            deadline: service.deadline
           };
-          
+
           loadedServices.push(formattedService);
-          
+
           if (service.client.toLowerCase() === account.toLowerCase()) {
             clientServicesTemp.push(formattedService);
           }
         }
       }
-      
+
       setServices(loadedServices);
       setClientServices(clientServicesTemp);
     } catch (error) {
@@ -145,21 +146,21 @@ function App() {
     }
   };
 
-  const createService = async (title, price) => {
+  const createService = async (title, price, deadlineHours) => {
     setError('');
     setSuccess('');
     setLoading(true);
-    
+
     try {
       const priceInWei = web3.utils.toWei(price, 'ether');
-      await contract.methods.offerService(title, priceInWei).send({ from: accounts[0] });
+      await contract.methods.offerService(title, priceInWei, deadlineHours).send({ from: accounts[0] });
       setSuccess('Service created successfully!');
       await loadServices(web3, contract, accounts[0]);
     } catch (error) {
       console.error("Error creating service:", error);
       setError('Failed to create service. Check console for details.');
     }
-    
+
     setLoading(false);
   };
 
@@ -167,10 +168,10 @@ function App() {
     setError('');
     setSuccess('');
     setLoading(true);
-    
+
     try {
       const priceInWei = web3.utils.toWei(price, 'ether');
-      await contract.methods.hireFreelancer(serviceId).send({ 
+      await contract.methods.hireFreelancer(serviceId).send({
         from: accounts[0],
         value: priceInWei
       });
@@ -180,7 +181,7 @@ function App() {
       console.error("Error hiring freelancer:", error);
       setError('Failed to hire freelancer. Check console for details.');
     }
-    
+
     setLoading(false);
   };
 
@@ -188,7 +189,7 @@ function App() {
     setError('');
     setSuccess('');
     setLoading(true);
-    
+
     try {
       await contract.methods.releasePayment(serviceId).send({ from: accounts[0] });
       setSuccess('Payment released successfully!');
@@ -197,7 +198,24 @@ function App() {
       console.error("Error releasing payment:", error);
       setError('Failed to release payment. Check console for details.');
     }
-    
+
+    setLoading(false);
+  };
+
+  const refundClient = async (serviceId) => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      await contract.methods.refundClient(serviceId).send({ from: accounts[0] });
+      setSuccess('Refund successful!');
+      await loadServices(web3, contract, accounts[0]);
+    } catch (error) {
+      console.error("Error refunding client:", error);
+      setError('Failed to refund client. Check console for details.');
+    }
+
     setLoading(false);
   };
 
@@ -246,89 +264,93 @@ function App() {
 
   if (isLoading) {
     return <Loading />;
-  }  
+  }
   return (
     <div className="App">
-      <Navbar 
-        accounts={accounts} 
+      <Navbar
+        accounts={accounts}
         setActiveTab={setActiveTab}
         isFreelancer={isFreelancer}
         toggleUserType={toggleUserType}
-        activeTab={activeTab}  
+        activeTab={activeTab}
       />
 
-      
-      <div className="container mt-4">
-        
-        {activeTab === 'marketplace' && !isFreelancer && (
-          <div>
-            <h2>Available Services</h2>
-            <ServiceList 
-              services={services} 
-              currentAccount={accounts[0]} 
-              hireFreelancer={hireFreelancer}
-              isFreelancer={isFreelancer}
-              activeTab={activeTab}
-            />
-          </div>
-        )}
+      <div className="container-fluid px-0 mt-4">
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <div style={{ maxWidth: '80%', width: '100%' }}>
+            {activeTab === 'marketplace' && !isFreelancer && (
+              <div>
+                <h2>Available Services</h2>
+                <ServiceList
+                  services={services}
+                  currentAccount={accounts[0]}
+                  hireFreelancer={hireFreelancer}
+                  isFreelancer={isFreelancer}
+                  activeTab={activeTab}
+                />
+              </div>
+            )}
 
-        {activeTab === 'Marketplacef' && isFreelancer &&(
-          <div>
-            <h2>Available Services</h2>
-            <ServiceList 
-              services={services} 
-              currentAccount={accounts[0]} 
-              hireFreelancer={hireFreelancer}
-              isFreelancer={isFreelancer}
-              activeTab={activeTab}
-            />
-          </div>
-        )}
-        
-        {activeTab === 'offerService' && isFreelancer && (
-          <div>
-            <h2>Offer Your Service</h2>
-            <div className='service-form'><ServiceForm createService={createService} /></div>
-          </div>
-        )}
+            {activeTab === 'Marketplacef' && isFreelancer && (
+              <div>
+                <h2>Available Services</h2>
+                <ServiceList
+                  services={services}
+                  currentAccount={accounts[0]}
+                  hireFreelancer={hireFreelancer}
+                  isFreelancer={isFreelancer}
+                  activeTab={activeTab}
+                />
+              </div>
+            )}
 
-        {activeTab === 'myServices' && isFreelancer && (
-          <div>
-            <h2>My Services</h2>
-            <FreelancerDashboard
-              services={services}
-              currentAccount={accounts[0]}
-            />
-          </div>
-        )}
-        
-        {activeTab === 'clientDashboard' && !isFreelancer && (
-          <div>
-            <h2>Services You've Hired</h2>
-            <ClientDashboard 
-              services={clientServices}
-              releasePayment={releasePayment}
-              rateService={rateService}
-              getAverageRating={getAverageRating}  
-            />
-          </div>
-        )}
+            {activeTab === 'offerService' && isFreelancer && (
+              <div>
+                <div className='mt-5' style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+                  <h2 className='mb-4'>Offer Your Service</h2>
+                  <div className='service-form' style={{ width: '65%' }}><ServiceForm createService={createService} /></div>
+                </div>
+              </div>
+            )}
 
-        {activeTab === 'offerService' && !isFreelancer && setActiveTab('clientDashboard')}
-        {activeTab === 'myServices' && !isFreelancer && setActiveTab('clientDashboard')}
-        {activeTab === 'Marketplacef' && !isFreelancer && setActiveTab('clientDashboard')}
-        {activeTab === 'marketplace' && isFreelancer && setActiveTab('myServices')}
-        {activeTab === 'clientDashboard' && isFreelancer && setActiveTab('myServices')}
+            {activeTab === 'myServices' && isFreelancer && (
+              <div>
+                <h2>My Services</h2>
+                <FreelancerDashboard
+                  services={services}
+                  currentAccount={accounts[0]}
+                />
+              </div>
+            )}
 
-        <div className={`alert alert-danger ${visible && error ? 'show' : ''}`}>
-          {error || ''}
+            {activeTab === 'clientDashboard' && !isFreelancer && (
+              <div>
+                <h2>Services You've Hired</h2>
+                <ClientDashboard
+                  services={clientServices}
+                  releasePayment={releasePayment}
+                  rateService={rateService}
+                  refundClient={refundClient}
+                  getAverageRating={getAverageRating}
+                />
+              </div>
+            )}
+
+            {activeTab === 'offerService' && !isFreelancer && setActiveTab('clientDashboard')}
+            {activeTab === 'myServices' && !isFreelancer && setActiveTab('clientDashboard')}
+            {activeTab === 'Marketplacef' && !isFreelancer && setActiveTab('clientDashboard')}
+            {activeTab === 'marketplace' && isFreelancer && setActiveTab('myServices')}
+            {activeTab === 'clientDashboard' && isFreelancer && setActiveTab('myServices')}
+
+            <div className={`alert alert-danger ${visible && error ? 'show' : ''}`}>
+              {error || ''}
+            </div>
+
+            <div className={`alert alert-success ${visible && success ? 'show' : ''}`}>
+              {success || ''}
+            </div>
+          </div>
         </div>
-
-        <div className={`alert alert-success ${visible && success ? 'show' : ''}`}>
-          {success || ''}
-        </div>
-
       </div>
     </div>
   );

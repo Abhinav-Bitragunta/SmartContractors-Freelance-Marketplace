@@ -7,8 +7,8 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, a
   );
 
   const filteredServices = isFreelancer 
-    ? availableServices.filter(service => service.freelancer.toLowerCase() !== currentAccount.toLowerCase())
-    : availableServices;
+    ? availableServices.filter(service => service.freelancer.toLowerCase() !== currentAccount.toLowerCase() && (service.deadline >= Math.floor(Date.now() / 1000)))
+    : availableServices.filter(service => service.deadline >= Math.floor(Date.now() / 1000));
 
   if (filteredServices.length === 0) {
     return <div className="alert alert-info">No services available at the moment.</div>;
@@ -34,6 +34,9 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, a
               </p>
               <p className="card-text">
                 <strong> Number of reviews: </strong> {parseInt(service.ratingCount) > 0 ? `${service.ratingCount}`: 0}
+              </p>
+              <p className="card-text">
+                <strong> Available for (days): </strong> {`${Math.ceil((service.deadline - Math.floor(Date.now() / 1000)) / (24* 3600))}`}
               </p>
             </div>
             <div className="card-footer">

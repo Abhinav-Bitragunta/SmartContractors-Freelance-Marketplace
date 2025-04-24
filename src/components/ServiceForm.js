@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 function ServiceForm({ createService }) {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
+  const [deadlineDays, setDeadlineDays] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !price) return;
-    
-    createService(title, price);
+    if (!title || !price || !deadlineDays) return;
+
+    createService(title, price, deadlineDays);
     setTitle('');
     setPrice('');
+    setDeadlineDays('');
   };
 
   return (
-    <div className="card service-card w-50">
+    <div className="card service-card w-100">
       <div className="card-body">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -37,9 +39,23 @@ function ServiceForm({ createService }) {
               id="price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.0001"
+              placeholder="e.g., 0.0001"
               step="0.0001"
               min="0"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="deadline">Service Availability (days from creation)</label>
+            <input
+              type="number"
+              className="form-control"
+              id="deadline"
+              value={deadlineDays}
+              onChange={(e) => setDeadlineDays(e.target.value)}
+              placeholder="e.g., 14"
+              min="1"
+              max="180"
               required
             />
           </div>

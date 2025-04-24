@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ClientDashboard({ services, releasePayment, rateService }) {
+function ClientDashboard({ services, releasePayment, rateService, refundClient }) {
   const [ratingInputs, setRatingInputs] = useState({});
 
   const handleRatingChange = (serviceId, event) => {
@@ -27,6 +27,7 @@ function ClientDashboard({ services, releasePayment, rateService }) {
             <th>Status</th>
             <th>Rating</th>
             <th>Actions</th>
+            <th>Refund Status</th>
           </tr>
         </thead>
         <tbody>
@@ -42,11 +43,13 @@ function ClientDashboard({ services, releasePayment, rateService }) {
                 <td>{service.price}</td>
                 <td>
                   {service.isPaid ? (
-                    <span className="badge2 badge-success">Completed</span>
-                  ) : service.isActive ? (
+                    <span className="badge2 badge-success">Payment Received</span>
+                  ) : service.isActive && service.deadline >= Math.floor(Date.now() / 1000) ? (
                     <span className="badge2 badge-warning">In Progress</span>
+                  ) : service.isActive && service.deadline < Math.floor(Date.now() / 1000) ? (
+                    <span className="badge2 badge-warning">Expired</span>
                   ) : (
-                    <span className="badge2 badge-secondary">Cancelled</span>
+                    <span className="badge2 badge-success">Refunded</span>
                   )}
                 </td>
                 <td>
@@ -73,17 +76,17 @@ function ClientDashboard({ services, releasePayment, rateService }) {
                 <td>
                   {service.isActive && !service.isPaid && (
                     <>
-                      <button 
+                      <button
                         className="btn btn-success btn-sm mr-2"
                         onClick={() => releasePayment(service.id)}
                       >
                         Release Payment
                       </button>
-                      
+
                     </>
                   )}
                   {service.isPaid && (!service.serviceRating || ratingValue === 0) && (
-                    <button 
+                    <button
                       className="btn btn-primary btn-sm"
                       onClick={() => handleRate(service.id)}
                     >
@@ -92,6 +95,29 @@ function ClientDashboard({ services, releasePayment, rateService }) {
                   )}
                   {service.isPaid && ratingValue > 0 && (
                     <span className="text-success">Rated</span>
+                  )}
+                  {!service.isPaid && !service.isActive && (
+                    <span>Unrated</span>
+                  )}
+                </td>
+                <td>
+                  {service.isActive && !service.isPaid ? (
+                    service.deadline > Math.floor(Date.now() / 1000) ? (
+                      <span>
+                        Refund available in {Math.ceil((service.deadline - Math.floor(Date.now() / 1000)) / (24 * 3600))} day(s)
+                      </span>
+                    ) : (
+                      <button
+                        className="btn btn-danger btn-sm mr-2"
+                        onClick={() => refundClient(service.id)}
+                      >
+                        Request refund
+                      </button>
+                    )
+                  ) : (
+                    <span>
+                      Refund no longer available
+                    </span>
                   )}
                 </td>
               </tr>
