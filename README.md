@@ -131,7 +131,7 @@ truffle test
 ```
 <div align="center">
    
-![image](https://github.com/user-attachments/assets/92e1fbee-eb5e-47b8-8e0b-f318cc9c0c17)
+![image](https://github.com/user-attachments/assets/68035f56-a6d7-4390-a519-0679a2107fea)
 
 </div>
 
