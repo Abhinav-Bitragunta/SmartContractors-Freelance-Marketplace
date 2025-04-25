@@ -18,8 +18,8 @@ This project was made for *CS 218: Programmable and Interoperable Blockchains* b
 
 ## Features
 
-- Freelancers can list services with a title, price and availability (in days). These will be listed in the marketplace for anyone to hire
-- The marketplace displays currently active services offered by the freelancers on the network. Each service has its title, price and availability listed
+- Freelancers can list services with a title, description, price and availability (in days). These will be listed in the marketplace for anyone to hire
+- The marketplace displays currently active services offered by the freelancers on the network. Each service has its title, description, price and availability listed
 - Clients can hire freelancers from the marketplace, escrow payments, and release them upon completion (handled by smart contracts)
 - Clients can view the details of every service they've hired
 - Freelancers can view the services they offer, along with the details of each service
@@ -131,18 +131,6 @@ truffle test
 ```
 <div align="center">
    
-![image](https://github.com/user-attachments/assets/68035f56-a6d7-4390-a519-0679a2107fea)
+![image](https://github.com/user-attachments/assets/255d3d14-0d72-4fe1-8981-7aba00b0120d)
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
