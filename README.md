@@ -133,7 +133,7 @@ Run the following in a terminal opened in the root directory to run the tests(af
 truffle test
 ```
 <div align="center">
-   
-![image](https://github.com/user-attachments/assets/255d3d14-0d72-4fe1-8981-7aba00b0120d)
+
+![image](https://github.com/user-attachments/assets/90407c4c-2bbb-46f7-a284-a5c3755944a5)
 
 </div>
