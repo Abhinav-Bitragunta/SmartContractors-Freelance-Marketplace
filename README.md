@@ -18,17 +18,17 @@ This project was made for *CS 218: Programmable and Interoperable Blockchains* b
 
 ## Features
 
-- Freelancers can list services with a title, description, price and availability (in days). These will be listed in the marketplace for anyone to hire
-- The marketplace displays currently active services offered by the freelancers on the network. Each service has its title, description, price and availability listed
+- Freelancers can list services with a title, description, price, and availability (in days). These will be listed in the marketplace for anyone to hire
+- The marketplace displays currently active services offered by freelancers on the network. Each service has its title, description, price, and availability listed
 - Clients can hire freelancers from the marketplace, escrow payments, and release them upon completion (handled by smart contracts)
 - Clients can view the details of every service they've hired
 - Freelancers can view the services they offer, along with the details of each service
   
 We implemented the following *bonus features* as well
-- The services listed on the marketplace are accompanied by the average rating for the freelancer offering it, and the number of ratings they've received till date
+- The services listed on the marketplace are accompanied by the average rating for the freelancer offering it, and the number of ratings they've received to date
 - Upon the completion of a service, the client may rate it on a 1-5 scale based on their degree of satisfaction. This affects the freelancer's average rating
 - The rating obtained for each service is visible to the freelancer
-- Clients can refund their payment incase their work isn't completed by the end of the availability period of that service
+- Clients can refund their payment in case their work isn't completed by the end of the availability period of that service
 
 ## Instructions for setup (Windows)
 
@@ -77,7 +77,7 @@ Switch to the newly created testnet, and then select the highlighted dropdown.
 ![image](https://github.com/user-attachments/assets/8d0ed1ce-3ab6-4084-a37f-aa1625a54c2c)
 
 </div>
-Select Add account or hardware wallet, and paste the address copied earlier and select import.
+Select Add account or hardware wallet, paste the address copied earlier, and select import.
 <div align="center">
    
 ![image](https://github.com/user-attachments/assets/83b2d64e-78bc-4297-b6a3-2fb2070bc695)
@@ -85,7 +85,7 @@ Select Add account or hardware wallet, and paste the address copied earlier and 
 ![image](https://github.com/user-attachments/assets/3a406c07-f786-4fa3-a752-44844eb07d08)
 
 </div>
-Your interface should now look like so
+Your interface should now look like this
 
 ![image](https://github.com/user-attachments/assets/f269bb8c-0a1c-452d-beed-5a0ef07bda8e)
 
@@ -107,16 +107,16 @@ Now connect your account by opening MetaMask(make sure you're on the right test 
 
 
 </div>
-The connection, followed by a refresh completes the set up.
+The connection, followed by a refresh, completes the setup.
 
 ## Usage
 
 ### For Freelancers:
 1. Make sure you're in "Freelancer Mode" (toggle in the navbar)
 2. Click "Offer Service" in the navigation
-3. Fill out the service form with title, description and price
+3. Fill out the service form with title, description, and price
 4. Submit the form to create your service listing
-5. You can view the status of your services is the "My Services" tab
+5. You can view the status of your services in the "My Services" tab
 
 ### For Clients:
 1. Switch to "Client Mode" (toggle in the navbar)
