@@ -147,14 +147,14 @@ function App() {
     }
   };
 
-  const createService = async (title, description, price, deadlineHours) => {
+  const createService = async (title, description, price, deadlineDays) => {
     setError('');
     setSuccess('');
     setLoading(true);
 
     try {
       const priceInWei = web3.utils.toWei(price, 'ether');
-      await contract.methods.offerService(title, description, priceInWei, deadlineHours).send({ from: accounts[0] });
+      await contract.methods.offerService(title, description, priceInWei, deadlineDays).send({ from: accounts[0] });
       setSuccess('Service created successfully!');
       await loadServices(web3, contract, accounts[0]);
     } catch (error) {

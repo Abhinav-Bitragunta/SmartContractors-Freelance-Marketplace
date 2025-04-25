@@ -114,7 +114,7 @@ The connection, followed by a refresh completes the set up.
 ### For Freelancers:
 1. Make sure you're in "Freelancer Mode" (toggle in the navbar)
 2. Click "Offer Service" in the navigation
-3. Fill out the service form with title and price
+3. Fill out the service form with title, description and price
 4. Submit the form to create your service listing
 5. You can view the status of your services is the "My Services" tab
 
@@ -125,6 +125,7 @@ The connection, followed by a refresh completes the set up.
 4. Check "My Hired Services" to manage and view your hired services
 5. Release payment when work is complete
 6. Rate completed services as desired
+7. In case the deadline passes, the refund option becomes available
 
 ## Testing
 Run the following in a terminal opened in the root directory to run the tests(after terminating the website instance, in a new terminal if necessary).

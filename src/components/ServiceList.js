@@ -6,7 +6,7 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, a
     service.client === '0x0000000000000000000000000000000000000000'
   );
 
-  const filteredServices = isFreelancer 
+  const filteredServices = !isFreelancer 
     ? availableServices.filter(service => service.freelancer.toLowerCase() !== currentAccount.toLowerCase() && (service.deadline >= Math.floor(Date.now() / 1000)))
     : availableServices.filter(service => service.deadline >= Math.floor(Date.now() / 1000));
 
