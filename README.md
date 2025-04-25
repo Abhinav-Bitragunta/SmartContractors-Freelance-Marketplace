@@ -89,12 +89,14 @@ Your interface should now look like so
 
 ![image](https://github.com/user-attachments/assets/f269bb8c-0a1c-452d-beed-5a0ef07bda8e)
 
-### 4. Run the server
+### 4. Compile the contracts and run the application
 Open a terminal in the root directory of the project, and run
 ``` bash
+truffle compile
+truffle migrate --reset
 npm start
 ```
-Your interface should now look like this.
+Your interface, after all the commands finish execution, should now look like this.
 
 ![image](https://github.com/user-attachments/assets/ff47c62e-71c4-4c96-be4b-1c69e684fe9d)
 
