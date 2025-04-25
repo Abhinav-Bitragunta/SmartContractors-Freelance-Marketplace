@@ -26,6 +26,9 @@ function ServiceList({ services, currentAccount, hireFreelancer, isFreelancer, a
               <p className="card-text">
                 <strong>Price:</strong> {service.price} ETH
               </p>
+              <p className="card-text">
+                <strong>Description:</strong> {service.description}
+              </p>
               <p className="card-text text-truncate">
                  <strong> Freelancer: </strong> {service.freelancer.substring(0, 6)}...{service.freelancer.substring(service.freelancer.length - 4)}
               </p>

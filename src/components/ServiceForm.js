@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 
 function ServiceForm({ createService }) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [deadlineDays, setDeadlineDays] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !price || !deadlineDays) return;
+    if (!title || !description || !price || !deadlineDays) return;
 
-    createService(title, price, deadlineDays);
+    createService(title, description, price, deadlineDays);
     setTitle('');
+    setDescription('');
     setPrice('');
     setDeadlineDays('');
   };
@@ -28,6 +30,18 @@ function ServiceForm({ createService }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Web Development"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Service Description</label>
+            <input
+              type="text"
+              className="form-control"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g., Create a personalized website."
               required
             />
           </div>

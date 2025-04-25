@@ -121,6 +121,7 @@ function App() {
             freelancer: service.freelancer,
             client: service.client,
             title: service.title,
+            description: service.description,
             price: web3.utils.fromWei(service.price, 'ether'),
             isActive: service.isActive,
             isPaid: service.isPaid,
@@ -146,14 +147,14 @@ function App() {
     }
   };
 
-  const createService = async (title, price, deadlineHours) => {
+  const createService = async (title, description, price, deadlineHours) => {
     setError('');
     setSuccess('');
     setLoading(true);
 
     try {
       const priceInWei = web3.utils.toWei(price, 'ether');
-      await contract.methods.offerService(title, priceInWei, deadlineHours).send({ from: accounts[0] });
+      await contract.methods.offerService(title, description, priceInWei, deadlineHours).send({ from: accounts[0] });
       setSuccess('Service created successfully!');
       await loadServices(web3, contract, accounts[0]);
     } catch (error) {
@@ -236,28 +237,6 @@ function App() {
     setLoading(false);
   };
 
-  const getAverageRating = async (freelancerAddress) => {
-    try {
-      const avgRating = await contract.methods.getAverageRating(freelancerAddress).call();
-      return avgRating;
-    } catch (error) {
-      console.error("Error fetching average rating:", error);
-      setError('Failed to get average rating. Check console for details.');
-      return "0";
-    }
-  };
-
-  const getRatingCount = async (freelancerAddress) => {
-    try {
-      const ratingCount = await contract.methods.getRatingCount(freelancerAddress).call();
-      return ratingCount;
-    } catch (error) {
-      console.error("Error fetching rating count:", error);
-      setError('Failed to get rating count. Check console for details.');
-      return "0";
-    }
-  };
-
   const toggleUserType = () => {
     setIsFreelancer(!isFreelancer);
   };
@@ -331,7 +310,6 @@ function App() {
                   releasePayment={releasePayment}
                   rateService={rateService}
                   refundClient={refundClient}
-                  getAverageRating={getAverageRating}
                 />
               </div>
             )}

@@ -9,6 +9,7 @@ contract FreelanceMarketplace is ReentrancyGuard {
         address freelancer;
         address client;
         string title;
+        string description;
         uint256 price;
         bool isActive;
         bool isPaid;
@@ -29,7 +30,7 @@ contract FreelanceMarketplace is ReentrancyGuard {
 
     mapping(address => FreelancerRating) public freelancerRatings;
     
-    event ServiceOffered(uint256 indexed serviceId, address indexed freelancer, string title, uint256 price);
+    event ServiceOffered(uint256 indexed serviceId, address indexed freelancer, string title, string description, uint256 price, uint256 deadline);
     event FreelancerHired(uint256 indexed serviceId, address indexed client);
     event PaymentReleased(uint256 indexed serviceId, address indexed freelancer, uint256 amount);
     event ClientRefunded(uint256 indexed serviceId, address indexed client, uint256 amount);
@@ -39,10 +40,12 @@ contract FreelanceMarketplace is ReentrancyGuard {
      * @dev Allows freelancers to list their services
      * @param _title Short service title
      * @param _price Service cost in wei
+     * @param _description Description of the service
      * @param _deadline Deadline in days from creation
      */
-    function offerService(string memory _title, uint256 _price, uint256 _deadline) external returns (uint256) {
+    function offerService(string memory _title, string memory _description, uint256 _price, uint256 _deadline) external returns (uint256) {
         require(bytes(_title).length > 0, "Title cannot be empty");
+        require(bytes(_description).length > 0, "Description cannot be empty");
         require(_price > 0, "Price must be greater than 0");
         require(_deadline > 0, "Deadline must be in the future");
         
@@ -54,6 +57,7 @@ contract FreelanceMarketplace is ReentrancyGuard {
             freelancer: msg.sender,
             client: address(0),
             title: _title,
+            description: _description,
             price: _price,
             isActive: true,
             isPaid: false,
@@ -63,7 +67,7 @@ contract FreelanceMarketplace is ReentrancyGuard {
         
         serviceCounter++;
         
-        emit ServiceOffered(serviceId, msg.sender, _title, _price);
+        emit ServiceOffered(serviceId, msg.sender, _title, _description, _price, _deadline);
         return serviceId;
     }
     
@@ -75,7 +79,6 @@ contract FreelanceMarketplace is ReentrancyGuard {
         Service storage service = services[_serviceId];
         
         require(service.freelancer != address(0), "Service does not exist");
-        require(msg.sender != service.freelancer, "Freelancer cannot hire themselves");
         require(service.isActive, "Service is not active");
         require(service.client == address(0), "Service already hired");
         require(msg.value == service.price, "Payment must match service price");

@@ -7,6 +7,7 @@ contract("FreelanceMarketplace", accounts => {
   const otherUser = accounts[3];
   const servicePrice = web3.utils.toWei("0.1", "ether");
   const serviceTitle = "Web Development";
+  const serviceDescription = "Create a personalized website";
   const serviceDeadlineDays = 1; 
 
   let freelanceMarketplace;
@@ -18,37 +19,49 @@ contract("FreelanceMarketplace", accounts => {
 
   describe("Service Listing", () => {
     it("should allow freelancers to list services", async () => {
-      const tx = await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      const tx = await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       serviceId = tx.logs[0].args.serviceId.toNumber();
 
       const service = await freelanceMarketplace.services(serviceId);
       assert.equal(service.freelancer, freelancer, "Freelancer address mismatch");
       assert.equal(service.title, serviceTitle, "Service title mismatch");
+      assert.equal(service.description, serviceDescription, "Service description mismatch");
       assert.equal(service.price, servicePrice, "Service price mismatch");
       assert.equal(service.isActive, true, "Service should be active");
 
       assert.equal(tx.logs[0].event, "ServiceOffered", "Expected ServiceOffered event");
       assert.equal(tx.logs[0].args.freelancer, freelancer, "Event freelancer mismatch");
       assert.equal(tx.logs[0].args.title, serviceTitle, "Event title mismatch");
+      assert.equal(tx.logs[0].args.description, serviceDescription, "Event description mismatch");
+      assert.equal(tx.logs[0].args.price.toString(), servicePrice, "Event price mismatch");
+      assert.equal(tx.logs[0].args.deadline.toNumber(), serviceDeadlineDays, "Event deadline mismatch");
+
     });
 
     it("should reject empty titles", async () => {
       await expectRevert(
-        freelanceMarketplace.offerService("", servicePrice, serviceDeadlineDays, { from: freelancer }),
+        freelanceMarketplace.offerService("", serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer }),
         "Title cannot be empty"
+      );
+    });
+    
+    it("should reject empty desciptions", async () => {
+      await expectRevert(
+        freelanceMarketplace.offerService(serviceTitle, "", servicePrice, serviceDeadlineDays, { from: freelancer }),
+        "Description cannot be empty"
       );
     });
 
     it("should reject zero prices", async () => {
       await expectRevert(
-        freelanceMarketplace.offerService(serviceTitle, 0, serviceDeadlineDays, { from: freelancer }),
+        freelanceMarketplace.offerService(serviceTitle, serviceDescription, 0, serviceDeadlineDays, { from: freelancer }),
         "Price must be greater than 0"
       );
     });
 
     it("should reject zero deadlines", async () => {
       await expectRevert(
-        freelanceMarketplace.offerService(serviceTitle, servicePrice, 0, { from: freelancer }),
+        freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, 0, { from: freelancer }),
         "Deadline must be in the future"
       );
     });
@@ -56,7 +69,7 @@ contract("FreelanceMarketplace", accounts => {
 
   describe("Hiring Process", () => {
     beforeEach(async () => {
-      const tx = await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      const tx = await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       serviceId = tx.logs[0].args.serviceId.toNumber();
     });
 
@@ -103,7 +116,7 @@ contract("FreelanceMarketplace", accounts => {
 
   describe("Payment Release", () => {
     beforeEach(async () => {
-      const tx = await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      const tx = await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       serviceId = tx.logs[0].args.serviceId.toNumber();
       await freelanceMarketplace.hireFreelancer(serviceId, { from: client, value: servicePrice });
     });
@@ -151,7 +164,7 @@ contract("FreelanceMarketplace", accounts => {
 
   describe("Refund Process", () => {
     beforeEach(async () => {
-      const tx = await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      const tx = await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       serviceId = tx.logs[0].args.serviceId.toNumber();
       await freelanceMarketplace.hireFreelancer(serviceId, { from: client, value: servicePrice });
     });
@@ -211,7 +224,7 @@ contract("FreelanceMarketplace", accounts => {
 
   describe("Rating Services", () => {
     beforeEach(async () => {
-      let tx = await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      let tx = await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       serviceId = tx.logs[0].args.serviceId.toNumber();
       await freelanceMarketplace.hireFreelancer(serviceId, { from: client, value: servicePrice });
       await freelanceMarketplace.releasePayment(serviceId, { from: client });
@@ -251,7 +264,7 @@ contract("FreelanceMarketplace", accounts => {
   describe("Utility Views", () => {
     it("should return correct service count", async () => {
       assert.equal((await freelanceMarketplace.getServiceCount()).toString(), '0');
-      await freelanceMarketplace.offerService(serviceTitle, servicePrice, serviceDeadlineDays, { from: freelancer });
+      await freelanceMarketplace.offerService(serviceTitle, serviceDescription, servicePrice, serviceDeadlineDays, { from: freelancer });
       assert.equal((await freelanceMarketplace.getServiceCount()).toString(), '1');
     });
   });
