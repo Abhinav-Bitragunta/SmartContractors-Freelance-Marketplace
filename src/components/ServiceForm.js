@@ -30,6 +30,7 @@ function ServiceForm({ createService }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Web Development"
+              maxLength={50}
               required
             />
           </div>
@@ -42,6 +43,7 @@ function ServiceForm({ createService }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., Create a personalized website."
+              maxLength={200}
               required
             />
           </div>

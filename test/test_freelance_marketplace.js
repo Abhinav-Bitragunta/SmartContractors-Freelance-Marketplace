@@ -73,7 +73,7 @@ contract("FreelanceMarketplace", accounts => {
       serviceId = tx.logs[0].args.serviceId.toNumber();
     });
 
-    it("should allow clients to hire freelancers", async () => {
+    it("should allow clients to hire freelancers and escrow funds correctly", async () => {
       const tx = await freelanceMarketplace.hireFreelancer(serviceId, { from: client, value: servicePrice });
 
       const service = await freelanceMarketplace.services(serviceId);
@@ -121,7 +121,7 @@ contract("FreelanceMarketplace", accounts => {
       await freelanceMarketplace.hireFreelancer(serviceId, { from: client, value: servicePrice });
     });
 
-    it("should allow client to release payment", async () => {
+    it("should allow client to release payment, and prevent double spending", async () => {
       const freelancerBalanceBefore = new BN(await web3.eth.getBalance(freelancer));
 
       const tx = await freelanceMarketplace.releasePayment(serviceId, { from: client });
