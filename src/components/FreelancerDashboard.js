@@ -39,7 +39,7 @@ function FreelancerDashboard({ services, currentAccount }) {
                 {service.isPaid ? (
                     <span className="badge2 badge-success">Payment Received</span>
                   ) : service.isActive && service.deadline >= Math.floor(Date.now() / 1000)? (
-                    <span className="badge2 badge-warning">In Progress</span>
+                    <span className="badge2 badge-warning">Active</span>
                   ) : service.isActive && service.deadline < Math.floor(Date.now() / 1000)?(
                     <span className="badge2 badge-warning">Expired</span>
                   ) : (

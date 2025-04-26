@@ -137,3 +137,10 @@ truffle test
 ![image](https://github.com/user-attachments/assets/90407c4c-2bbb-46f7-a284-a5c3755944a5)
 
 </div>
+
+## Future Work
+
+- The MarketPlace tab on client-side and freelancer-side could be refined by adding a categorise option, enabling easier searching
+- Freelancers could voluntarily post their CV which would be stored off-chain to represent their legitimacy or involvement with a well known organisation
+- Clients could be given a Trust Score which would directly reflect their past interactions with other freelancers
+- Incorporation of a Decentralised Dispute Resolution System that could resolve payment or rating disputes when presented with appropriate evidence
