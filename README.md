@@ -114,7 +114,7 @@ The connection, followed by a refresh, completes the setup.
 ### For Freelancers:
 1. Make sure you're in "Freelancer Mode" (toggle in the navbar)
 2. Click "Offer Service" in the navigation
-3. Fill out the service form with title, description, and price
+3. Fill out the service form with title, description, price and availability period.
 4. Submit the form to create your service listing
 5. You can view the status of your services in the "My Services" tab
 
